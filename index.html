@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Une question importante ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 60px 80px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #yes-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        #yes-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        #no-btn {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+            position: absolute;
+            transition: all 0.15s ease;
+        }
+
+        /* Animations pour la célébration */
+        .celebration {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .celebration.active {
+            display: flex;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .celebration h2 {
+            font-size: 4em;
+            color: white;
+            margin-bottom: 30px;
+            animation: bounce 1s infinite;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 2em;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: white;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💕 Veux-tu sortir avec moi ? 💕</h1>
+        <div class="buttons">
+            <button id="yes-btn">OUI ❤️</button>
+            <button id="no-btn">Non</button>
+        </div>
+    </div>
+
+    <div class="celebration" id="celebration">
+        <h2>🎉 YAAY! 🎉</h2>
+        <p style="font-size: 2em; color: white;">Je savais que tu dirais oui ! 💖</p>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const celebration = document.getElementById('celebration');
+
+        // Position initiale du bouton "Non"
+        let noBtnInitialized = false;
+
+        function initializeNoButton() {
+            if (!noBtnInitialized) {
+                const rect = noBtn.getBoundingClientRect();
+                noBtn.style.left = rect.left + 'px';
+                noBtn.style.top = rect.top + 'px';
+                noBtnInitialized = true;
+            }
+        }
+
+        // Faire fuir le bouton "Non"
+        noBtn.addEventListener('mouseover', (e) => {
+            initializeNoButton();
+            
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+
+            // Générer une position aléatoire
+            let newX = Math.random() * (windowWidth - btnWidth - 100);
+            let newY = Math.random() * (windowHeight - btnHeight - 100);
+
+            // S'assurer que le bouton reste visible
+            newX = Math.max(50, Math.min(newX, windowWidth - btnWidth - 50));
+            newY = Math.max(50, Math.min(newY, windowHeight - btnHeight - 50));
+
+            noBtn.style.left = newX + 'px';
+            noBtn.style.top = newY + 'px';
+        });
+
+        // Animation de célébration quand on clique sur "Oui"
+        yesBtn.addEventListener('click', () => {
+            celebration.classList.add('active');
+            
+            // Créer des cœurs qui tombent
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    createHeart();
+                }, i * 100);
+            }
+
+            // Créer des confettis
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    createConfetti();
+                }, i * 50);
+            }
+        });
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.textContent = '❤️';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            celebration.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 3000);
+        }
+
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            confetti.style.animationDelay = Math.random() * 3 + 's';
+            celebration.appendChild(confetti);
+
+            setTimeout(() => {
+                confetti.remove();
+            }, 6000);
+        }
+    </script>
+</body>
+</html>
